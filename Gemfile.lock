@@ -1,0 +1,35 @@
+PATH
+  remote: .
+  specs:
+    kindlize-email (0.1.0)
+      byebug
+      down
+      mail
+      nokogiri
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    addressable (2.7.0)
+      public_suffix (>= 2.0.2, < 5.0)
+    byebug (11.1.3)
+    down (5.2.0)
+      addressable (~> 2.5)
+    mail (2.7.1)
+      mini_mime (>= 0.1.1)
+    mini_mime (1.1.0)
+    nokogiri (1.11.3-x86_64-darwin)
+      racc (~> 1.4)
+    public_suffix (4.0.6)
+    racc (1.5.2)
+    rake (12.3.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  kindlize-email!
+  rake (~> 12.0)
+
+BUNDLED WITH
+   2.1.4

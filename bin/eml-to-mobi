@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'eml_to_html'
+
+EmlToHTML::Doer.new(ARGV.first).process
+system '/Applications/calibre.app/Contents/MacOS/ebook-convert out/out.html out/out.mobi && mv out/out.mobi out.mobi && rm -rf out'
