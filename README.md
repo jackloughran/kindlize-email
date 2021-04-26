@@ -15,8 +15,8 @@ Add this to Automator:
 ```bash
 for f in "$@"
 do
-	cd <path to this repo> && \
-	bin/eml-to-mobi "$f" && \
+    cd <path to this repo> && \
+    bin/eml-to-mobi "$f" && \
     mv out.mobi "${f}.mobi"
 done
 ```
