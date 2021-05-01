@@ -3,7 +3,6 @@ require 'nokogiri'
 require 'mail'
 require 'base64'
 require 'down'
-require 'byebug'
 
 module EmlToHTML
   class Error < StandardError; end
