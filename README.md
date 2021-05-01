@@ -4,6 +4,9 @@ Read newsletters on your Kindle!
 
 ## Usage
 
+_Note: this is currently only set up to work on mac, but modifying it to work elsewhere should be pretty easy._
+
+1. download and install [calibre](https://calibre-ebook.com/download_osx) (this uses the `ebook-convert` executable to convert an html file to a mobi file)
 1. run `bin/setup`
 1. run `bin/eml-to-mobi <path to .eml file>`
 1. email `out.mobi` to your Kindle
