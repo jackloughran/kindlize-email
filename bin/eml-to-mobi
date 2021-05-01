@@ -4,4 +4,8 @@ require 'bundler/setup'
 require 'eml_to_html'
 
 EmlToHTML::Doer.new(ARGV.first).process
-system '/Applications/calibre.app/Contents/MacOS/ebook-convert out/out.html out/out.mobi && mv out/out.mobi out.mobi && rm -rf out'
+
+calibre_path = ARGV[1] || '/Applications/calibre.app/Contents/MacOS'
+out_path = ARGV[2] || '.'
+
+system "#{calibre_path}/ebook-convert out/out.html out/out.mobi && mv out/out.mobi #{out_path}/out.mobi && rm -rf out"
