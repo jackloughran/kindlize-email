@@ -26,7 +26,7 @@ module EmlToHTML
     end
 
     def process
-      @base.css('title').first.content = @message.subject
+      @base.css('title').first.content = clean_subject(@message.subject)
 
       Dir.mkdir('out') unless Dir.exist?('out')
 
@@ -36,6 +36,10 @@ module EmlToHTML
     end
 
     private
+
+    def clean_subject(subject)
+      subject.delete_prefix('Fwd: ')
+    end
 
     def body_html(message)
       body_section_with_transfer_encoding = message.body.decoded.partition(%r{content-type: *text/html.*charset=utf-8\n}i).last
