@@ -8,7 +8,7 @@ module EmlToHTML
   class Error < StandardError; end
 
   class Doer
-    ACCEPTABLE_TAGS = %w[blockquote br h1 h2 h3 h4 h5 h6 ol ul p hr i em b a]
+    ACCEPTABLE_TAGS = %w[blockquote br h1 h2 h3 h4 h5 h6 ol ul li p hr i em b a]
 
     def initialize(file_path)
       @message = Mail.new(File.read(file_path, encoding: 'UTF-8'))
