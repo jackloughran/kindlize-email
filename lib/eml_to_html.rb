@@ -42,7 +42,9 @@ module EmlToHTML
     end
 
     def body_html(message)
-      body_section_with_transfer_encoding = message.body.decoded.partition(%r{content-type: *text/html.*charset=utf-8\n}i).last
+      # emails from wordpress seem to use \r\n, but other emails don't
+      fixed_message_body = message.body.decoded.gsub(/\r\n/, "\n")
+      body_section_with_transfer_encoding = fixed_message_body.partition(%r{content-type: *text/html.*charset=utf-8\n}i).last
       base64_encoded_body = body_section_with_transfer_encoding.partition("base64\n\n").last.partition("\n-----------------------").first
 
       return Base64.decode64(base64_encoded_body).force_encoding('UTF-8') unless base64_encoded_body.empty?
@@ -51,7 +53,7 @@ module EmlToHTML
     end
 
     def strip(node)
-      if node.name == 'img'
+      if node.name == 'img' && !node['src'].include?('pixel.wp.com')
         file_name = "#{image_counter}#{File.extname(node['src'])}"
         destination = "out/#{file_name}"
         Down.download(node['src'], destination: destination)
