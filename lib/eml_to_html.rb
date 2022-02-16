@@ -3,6 +3,7 @@ require 'nokogiri'
 require 'mail'
 require 'base64'
 require 'down'
+require 'cgi'
 
 module EmlToHTML
   class Error < StandardError; end
@@ -11,22 +12,30 @@ module EmlToHTML
     ACCEPTABLE_TAGS = %w[blockquote br h1 h2 h3 h4 h5 h6 ol ul li p hr i em b a]
 
     def initialize(file_path)
-      @message = Mail.new(File.read(file_path, encoding: 'UTF-8'))
-      @doc = Nokogiri::HTML(body_html(@message))
       @base = Nokogiri::HTML::Document.parse <<-EOHTML
-      <html>
-        <head>
-          <title></title>
-          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        </head>
-        <body>
-        </body>
-      </html>
+        <html>
+          <head>
+            <title></title>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+          </head>
+          <body>
+          </body>
+        </html>
       EOHTML
+      @working_dir = File.dirname(file_path)
+
+      if File.extname(file_path) == '.html'
+        @doc = Nokogiri::HTML(File.read(file_path, encoding: 'UTF-8'))
+        @subject = file_path
+      else
+        message = Mail.new(File.read(file_path, encoding: 'UTF-8'))
+        @doc = Nokogiri::HTML(body_html(message))
+        @subject = message.subject
+      end
     end
 
     def process
-      @base.css('title').first.content = clean_subject(@message.subject)
+      @base.css('title').first.content = clean_subject(@subject)
 
       Dir.mkdir('out') unless Dir.exist?('out')
 
@@ -56,8 +65,13 @@ module EmlToHTML
       if node.name == 'img' && !node['src'].include?('pixel.wp.com')
         file_name = "#{image_counter}#{File.extname(node['src'])}"
         destination = "out/#{file_name}"
-        Down.download(node['src'], destination: destination)
+        if node['src'].start_with?('http')
+          Down.download(node['src'], destination: destination)
+        else
+          `cp "#{@working_dir}/#{CGI.unescape(node['src'])}" "#{destination}"`
+        end
         node['src'] = file_name
+        node['srcset'] = nil
         return node
       end
 
